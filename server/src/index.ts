@@ -9,7 +9,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// --- REST API endpoint used by Next.js frontend ---
 app.post("/api/analyze", async (req, res) => {
   try {
     const result = await analyzeUrl(req.body.url);
@@ -20,7 +19,6 @@ app.post("/api/analyze", async (req, res) => {
   }
 });
 
-// --- MCP Server (for Chat Integration) ---
 createMCPServer(app);
 
 const PORT = process.env.SERVER_PORT || 4000;
