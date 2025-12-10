@@ -26,3 +26,9 @@ pnpm-debug.log*
 
 # Misc
 .pnpm-store/
+web/node_modules/
+server/node_modules/
+web/.next/
+server/dist/
+env/
+.env
