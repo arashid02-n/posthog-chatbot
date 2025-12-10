@@ -1,13 +1,20 @@
-# Server Dockerfile
+# Use Node.js 20 Alpine for backend
 FROM node:20-alpine
 
+# Set working directory inside container
 WORKDIR /app
 
-COPY package*.json ./
+# Copy only package files first for caching npm install
+COPY package.json package-lock.json ./
+
+# Install dependencies
 RUN npm ci
 
-COPY . .    # این یعنی همه فایل‌های context (../server) را در کانتینر /app می‌ریزد
+# Copy all backend files
+COPY . .  # context is ../server, so all files inside server folder will copy here
 
+# Expose backend port
 EXPOSE 4000
 
-CMD ["npm", "run", "dev"]
+# Default command to run
+CMD ["npm", "start"]
