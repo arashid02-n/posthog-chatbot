@@ -1,12 +1,14 @@
-# Backend Dockerfile (MCP Server + Node)
+# Server Dockerfile
+
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY server/package.json server/package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
-COPY server/ ./
+COPY . .
 
 EXPOSE 4000
+
 CMD ["npm", "run", "dev"]
