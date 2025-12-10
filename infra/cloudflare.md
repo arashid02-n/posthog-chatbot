@@ -3,7 +3,7 @@
 1. Add DNS ⇒ A Record
    - Type: A
    - Name: posthog
-   - IPv4: 185.250.148.194
+   - IPv4: 157.180.68.61
    - Proxy: ON (orange cloud)
 
 2. SSL/TLS
@@ -18,3 +18,4 @@
 4. Security
    - Allow inbound traffic on ports: 80, 443
    - No firewall rule should block NGINX or Docker
+
