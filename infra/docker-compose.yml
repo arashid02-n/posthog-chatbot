@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ../web                  # context = سورس فرانت
-      dockerfile: ../infra/docker/web.Dockerfile  # مسیر واقعی Dockerfile فرانت نسبت به infra
+      context: /root/posthog-chatbot/web       # Absolute path to frontend source
+      dockerfile: /root/posthog-chatbot/infra/docker/web.Dockerfile  # Absolute path to Dockerfile
     env_file:
       - ./env/production.env
     ports:
@@ -10,8 +10,8 @@ services:
 
   server:
     build:
-      context: ../server               # context = سورس بک‌اند
-      dockerfile: ../infra/docker/server.Dockerfile  # مسیر واقعی Dockerfile بک‌اند نسبت به infra
+      context: /root/posthog-chatbot/server    # Absolute path to backend source
+      dockerfile: /root/posthog-chatbot/infra/docker/server.Dockerfile  # Absolute path to Dockerfile
     env_file:
       - ./env/production.env
     ports:
