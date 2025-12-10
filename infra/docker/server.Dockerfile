@@ -1,5 +1,4 @@
 # Server Dockerfile
-
 FROM node:20-alpine
 
 WORKDIR /app
@@ -7,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+COPY . .    # این یعنی همه فایل‌های context (../server) را در کانتینر /app می‌ریزد
 
 EXPOSE 4000
 
