@@ -1,21 +1,18 @@
-version: "3.9"
 services:
   web:
     build:
-      context: .
-      dockerfile: infra/docker/web.Dockerfile
+      context: ../web
+      dockerfile: ../infra/docker/web.Dockerfile
+    env_file:
+      - ../infra/env/production.env
     ports:
       - "3000:3000"
-    env_file:
-      - infra/env/production.env
-    depends_on:
-      - server
 
   server:
     build:
-      context: .
-      dockerfile: infra/docker/server.Dockerfile
+      context: ../server
+      dockerfile: ../infra/docker/server.Dockerfile
+    env_file:
+      - ../infra/env/production.env
     ports:
       - "4000:4000"
-    env_file:
-      - infra/env/production.env
