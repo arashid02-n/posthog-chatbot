@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ../web              # frontend source
-      dockerfile: ../infra/docker/web.Dockerfile  # full path from infra folder
+      context: ../web                          # frontend source folder
+      dockerfile: ../infra/docker/web.Dockerfile
     env_file:
       - ./env/production.env
     ports:
@@ -10,8 +10,8 @@ services:
 
   server:
     build:
-      context: ../server           # backend source
-      dockerfile: ../infra/docker/server.Dockerfile  # full path from infra folder
+      context: ../server                       # backend source folder
+      dockerfile: ../infra/docker/server.Dockerfile
     env_file:
       - ./env/production.env
     ports:
