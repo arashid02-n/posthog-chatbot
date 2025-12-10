@@ -1,15 +1,19 @@
 # Dependencies
 node_modules/
+web/node_modules/
+server/node_modules/
 
 # Next.js build outputs
 .next/
 out/
 dist/
+server/dist/
 
 # Environment variables
 .env
 .env.*
 !.env.example
+env/
 
 # Logs
 npm-debug.log*
@@ -24,11 +28,6 @@ pnpm-debug.log*
 # OS files
 .DS_Store
 
-# Misc
+# Misc / package managers
 .pnpm-store/
-web/node_modules/
-server/node_modules/
-web/.next/
-server/dist/
-env/
-.env
+
