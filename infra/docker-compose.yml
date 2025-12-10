@@ -1,8 +1,10 @@
+version: "3.9"
+
 services:
   web:
     build:
-      context: /root/posthog-chatbot/web       # Absolute path to frontend source
-      dockerfile: /root/posthog-chatbot/infra/docker/web.Dockerfile  # Absolute path to Dockerfile
+      context: ../web           # Frontend source folder
+      dockerfile: ./docker/web.Dockerfile  # Dockerfile inside infra/docker
     env_file:
       - ./env/production.env
     ports:
@@ -10,8 +12,8 @@ services:
 
   server:
     build:
-      context: /root/posthog-chatbot/server    # Absolute path to backend source
-      dockerfile: /root/posthog-chatbot/infra/docker/server.Dockerfile  # Absolute path to Dockerfile
+      context: ../server        # Backend source folder
+      dockerfile: ./docker/server.Dockerfile # Dockerfile inside infra/docker
     env_file:
       - ./env/production.env
     ports:
