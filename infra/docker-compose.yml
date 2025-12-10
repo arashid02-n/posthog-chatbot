@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ../web          # مسیر واقعی سورس فرانت
-      dockerfile: ./docker/web.Dockerfile
+      context: ../web                  # context = سورس فرانت
+      dockerfile: ../infra/docker/web.Dockerfile  # مسیر واقعی Dockerfile فرانت نسبت به infra
     env_file:
       - ./env/production.env
     ports:
@@ -10,8 +10,8 @@ services:
 
   server:
     build:
-      context: ../server       # مسیر واقعی سورس بک‌اند
-      dockerfile: ./docker/server.Dockerfile
+      context: ../server               # context = سورس بک‌اند
+      dockerfile: ../infra/docker/server.Dockerfile  # مسیر واقعی Dockerfile بک‌اند نسبت به infra
     env_file:
       - ./env/production.env
     ports:
