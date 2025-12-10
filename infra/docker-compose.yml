@@ -1,10 +1,8 @@
-version: "3.9"
-
 services:
   web:
     build:
-      context: ../web           # Frontend source folder
-      dockerfile: ./docker/web.Dockerfile  # Dockerfile inside infra/docker
+      context: ../web              # frontend source
+      dockerfile: ../infra/docker/web.Dockerfile  # full path from infra folder
     env_file:
       - ./env/production.env
     ports:
@@ -12,8 +10,8 @@ services:
 
   server:
     build:
-      context: ../server        # Backend source folder
-      dockerfile: ./docker/server.Dockerfile # Dockerfile inside infra/docker
+      context: ../server           # backend source
+      dockerfile: ../infra/docker/server.Dockerfile  # full path from infra folder
     env_file:
       - ./env/production.env
     ports:
