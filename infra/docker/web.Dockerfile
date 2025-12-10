@@ -1,23 +1,23 @@
-# Use Node.js 20 Alpine for small image size
+# Use Node.js Alpine image
 FROM node:20-alpine
 
 # Set working directory inside container
 WORKDIR /app
 
-# Copy only package files first for caching npm install
+# Copy package files for caching
 COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy all frontend files
-COPY . .  # context is ../web, so all files inside web folder will copy here
+# Copy all frontend code
+COPY . .
 
 # Build frontend
 RUN npm run build
 
-# Expose port
+# Expose frontend port
 EXPOSE 3000
 
-# Default command to run
-CMD ["npm", "start"]
+# Start frontend
+CMD ["npm", "run", "start"]
