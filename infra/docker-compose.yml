@@ -1,19 +1,18 @@
 services:
   web:
     build:
-      context: ../web
-      dockerfile: ../infra/docker/web.Dockerfile
+      context: ../web          # مسیر واقعی سورس فرانت
+      dockerfile: ./docker/web.Dockerfile
     env_file:
-      - ../infra/env/production.env
+      - ./env/production.env
     ports:
       - "3000:3000"
 
   server:
     build:
-      context: ../server
-      dockerfile: ../infra/docker/server.Dockerfile
+      context: ../server       # مسیر واقعی سورس بک‌اند
+      dockerfile: ./docker/server.Dockerfile
     env_file:
-      - ../infra/env/production.env
+      - ./env/production.env
     ports:
       - "4000:4000"
-
