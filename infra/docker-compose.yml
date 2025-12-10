@@ -16,3 +16,4 @@ services:
       - ../infra/env/production.env
     ports:
       - "4000:4000"
+
