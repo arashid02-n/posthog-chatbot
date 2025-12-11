@@ -1,14 +1,16 @@
 import axios from "axios";
 
-export async function sendEvent(eventName: string, properties: Record<string, any> = {}) {
+export async function sendEvent(event: string, properties: Record<string, any> = {}) {
   try {
-    await axios.post("https://app.posthog.com/capture/", {
-      api_key: process.env.POSTHOG_API_KEY, // ← add API key here
-      event: eventName,
-      properties,
+    const response = await axios.post("https://us.i.posthog.com/capture/", {
+      api_key: process.env.POSTHOG_API_KEY,
+      event,
+      properties
     });
-    console.log(`Event sent: ${eventName}`, properties);
-  } catch (error) {
-    console.error("Failed to send event:", error);
+
+    return response.data;
+  } catch (err) {
+    console.error("Failed to send event:", err.response?.data || err);
+    throw err;
   }
 }
