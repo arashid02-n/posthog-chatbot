@@ -1,7 +1,30 @@
+import { posthogClient } from "./client";
+
 /**
- * Fetch event list from PostHog
+ * Register an event in PostHog
+ */
+export async function registerEvent(event: string, properties: Record<string, any> = {}) {
+  try {
+    const response = await posthogClient.post("/capture/", {
+      event,
+      properties,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to register event:", error);
+    return null;
+  }
+}
+
+/**
+ * Optional: fetch events list
  */
 export async function getEvents() {
-  // TODO: Real PostHog API call
-  return ["pageview", "signup", "click_button"];
+  try {
+    const response = await posthogClient.get("/events/");
+    return response.data;
+  } catch (err) {
+    console.error("Failed to fetch events", err);
+    return [];
+  }
 }
