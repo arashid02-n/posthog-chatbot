@@ -17,10 +17,14 @@ export default function UrlForm({
 
     // Register Event in PostHog
     try {
+      // Call backend API to register event
       await fetch("/api/posthog-event", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event: "generate_chart_clicked", properties: { url } }),
+        body: JSON.stringify({
+          event: "generate_chart_clicked",
+          properties: { url },
+        }),
       });
     } catch (err) {
       console.error("Failed to register event", err);
