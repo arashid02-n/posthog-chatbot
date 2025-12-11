@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { analyzeUrl } from "./api/analyze";
 import { createMCPServer } from "./mcp/mcpServer";
 import { logger } from "./utils/logger";
+import { sendEvent } from "./api/posthogEvent"; // <-- Import PostHog event sender
 
 dotenv.config();
 
@@ -16,6 +17,20 @@ app.post("/api/analyze", async (req, res) => {
     return res.json(result);
   } catch (err: any) {
     logger.error("Analyze failed", err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// PostHog event API
+app.post("/api/posthog-event", async (req, res) => {
+  const { event, properties } = req.body;
+  if (!event) return res.status(400).json({ error: "Event name required" });
+
+  try {
+    await sendEvent(event, properties || {});
+    return res.json({ status: "ok" });
+  } catch (err: any) {
+    logger.error("Failed to send PostHog event", err);
     return res.status(500).json({ error: err.message });
   }
 });
