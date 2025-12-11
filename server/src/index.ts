@@ -23,9 +23,10 @@ app.post("/api/analyze", async (req, res) => {
 // MCP server mount
 createMCPServer(app);
 
-const PORT = process.env.SERVER_PORT || 4000;
+// Convert env string → number
+const PORT = Number(process.env.SERVER_PORT) || 4000;
 
-// IMPORTANT: Listen on 0.0.0.0 for Docker
+// IMPORTANT: Docker requires listening on 0.0.0.0
 app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Backend server running on port ${PORT}`);
 });
