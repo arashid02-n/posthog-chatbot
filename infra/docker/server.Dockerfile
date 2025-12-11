@@ -4,20 +4,20 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy only package files
+# Copy only package files for caching
 COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy backend source
+# Copy the full backend source code
 COPY . .
 
-# Build TypeScript to JavaScript
-RUN npm run build   # <-- VERY IMPORTANT
+# Build TypeScript → JavaScript
+RUN npm run build   # <-- REQUIRED
 
 # Expose backend port
 EXPOSE 4000
 
-# Start backend (runs dist/index.js)
-CMD ["npm", "run", "start"]
+# Start backend from dist folder
+CMD ["node", "dist/index.js"]
