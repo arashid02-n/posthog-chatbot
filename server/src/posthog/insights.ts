@@ -1,20 +1,26 @@
 import { posthogClient } from "./client";
 
 /**
- * Fetch analytics data from PostHog for a specific URL.
+ * Fetch analytics data from PostHog for a specific URL
  */
 export async function getUrlInsights(url: string) {
-  // TODO: Replace this with actual PostHog API request
-  // Example PostHog endpoint: /api/projects/{id}/insights/
-  
-  const fakeChart = [
-    { label: "Visitors", value: 120 },
-    { label: "Clicks", value: 80 },
-    { label: "Conversions", value: 24 },
-  ];
+  try {
+    const response = await posthogClient.post("/insights/", {
+      filters: {
+        events: [{ id: "pageview" }],
+        properties: [{ key: "url", value: url }],
+      },
+    });
 
-  return {
-    chartData: fakeChart,
-    summary: `Analytics summary for: ${url}`,
-  };
+    return {
+      chartData: response.data.result || [],
+      summary: `Analytics summary for: ${url}`,
+    };
+  } catch (error) {
+    console.error("Failed to fetch insights:", error);
+    return {
+      chartData: [],
+      summary: `No data for ${url}`,
+    };
+  }
 }
