@@ -11,9 +11,21 @@ export default function UrlForm({
 }) {
   const [url, setUrl] = useState("");
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!url) return;
+
+    // ثبت Event در PostHog
+    try {
+      await fetch("/api/posthog-event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: "generate_chart", properties: { url } }),
+      });
+    } catch (err) {
+      console.error("Failed to register event", err);
+    }
+
     onSubmit(url);
   };
 
