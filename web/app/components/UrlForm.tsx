@@ -15,17 +15,18 @@ export default function UrlForm({
     e.preventDefault();
     if (!url) return;
 
-    // ثبت Event در PostHog
+    // Register Event in PostHog
     try {
       await fetch("/api/posthog-event", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event: "generate_chart", properties: { url } }),
+        body: JSON.stringify({ event: "generate_chart_clicked", properties: { url } }),
       });
     } catch (err) {
       console.error("Failed to register event", err);
     }
 
+    // Call the main onSubmit function to generate chart
     onSubmit(url);
   };
 
