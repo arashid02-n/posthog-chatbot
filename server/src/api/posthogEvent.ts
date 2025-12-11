@@ -1,23 +1,13 @@
-import { posthogClient } from "../posthog/client";
+import axios from "axios";
 
-/**
- * Send an event to PostHog Cloud
- * @param eventName Name of the event
- * @param properties Optional properties object
- */
 export async function sendEvent(eventName: string, properties: Record<string, any> = {}) {
   try {
-    // Include project ID in properties
-    const payload = {
+    await axios.post("https://app.posthog.com/capture/", {
+      api_key: process.env.POSTHOG_API_KEY, // ← add API key here
       event: eventName,
-      properties: {
-        ...properties,
-        project_id: process.env.POSTHOG_PROJECT_ID
-      }
-    };
-
-    await posthogClient.post("/capture/", payload);
-    console.log(`Event sent: ${eventName}`, payload);
+      properties,
+    });
+    console.log(`Event sent: ${eventName}`, properties);
   } catch (error) {
     console.error("Failed to send event:", error);
   }
