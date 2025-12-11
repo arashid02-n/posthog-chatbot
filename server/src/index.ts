@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { analyzeUrl } from "./api/analyze";
 import { createMCPServer } from "./mcp/mcpServer";
 import { logger } from "./utils/logger";
-import { sendEvent } from "./api/posthogEvent"; // <-- Import PostHog event sender
+import { sendEvent } from "./api/posthogEvent"; // <-- PostHog event sender
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ createMCPServer(app);
 // Convert env string → number
 const PORT = Number(process.env.SERVER_PORT) || 4000;
 
-// IMPORTANT: Docker requires listening on 0.0.0.0
+// Docker requires listening on 0.0.0.0
 app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Backend server running on port ${PORT}`);
 });
