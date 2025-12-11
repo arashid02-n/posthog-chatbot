@@ -5,8 +5,12 @@ import { posthogClient } from "../posthog/client";
  * @param eventName Name of the event
  * @param properties Optional properties object
  */
-export async function sendEvent(eventName: string, properties: Record<string, any> = {}) {
+export async function sendEvent(
+  eventName: string,
+  properties: Record<string, any> = {}
+) {
   try {
+    // Post event to PostHog using the correct API URL
     await posthogClient.post("/events/", {
       event: eventName,
       properties,
