@@ -1,9 +1,10 @@
+// server/src/index.ts
 import express from "express";
 import dotenv from "dotenv";
 import { analyzeUrl } from "./api/analyze";
 import { createMCPServer } from "./mcp/mcpServer";
 import { logger } from "./utils/logger";
-import { sendEvent } from "./api/posthogEvent"; // <-- PostHog event sender
+import { sendEvent } from "./api/posthogEvent";
 
 dotenv.config();
 
@@ -35,13 +36,11 @@ app.post("/api/posthog-event", async (req, res) => {
   }
 });
 
-// MCP server mount
+// MCP server mount (if present)
 createMCPServer(app);
 
-// Convert env string → number
-const PORT = Number(process.env.SERVER_PORT) || 4000;
-
-// Docker requires listening on 0.0.0.0
+// Convert env string → number, use 0.0.0.0 for Docker
+const PORT = Number(process.env.MCP_SERVER_PORT || process.env.SERVER_PORT) || 4000;
 app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Backend server running on port ${PORT}`);
 });
