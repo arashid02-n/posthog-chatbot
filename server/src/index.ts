@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+// Analyze API
 app.post("/api/analyze", async (req, res) => {
   try {
     const result = await analyzeUrl(req.body.url);
@@ -19,9 +20,12 @@ app.post("/api/analyze", async (req, res) => {
   }
 });
 
+// MCP server mount
 createMCPServer(app);
 
 const PORT = process.env.SERVER_PORT || 4000;
-app.listen(PORT, () => {
+
+// IMPORTANT: Listen on 0.0.0.0 for Docker
+app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Backend server running on port ${PORT}`);
 });
