@@ -25,7 +25,7 @@ export default function UrlForm({
       return;
     }
     if (!chartType) {
-      setError("Please select a chart type");
+      setError("Please enter a chart type from PostHog");
       return;
     }
 
@@ -72,21 +72,18 @@ export default function UrlForm({
         />
       </div>
 
-      {/* Chart Type Select */}
+      {/* Chart Type Input */}
       <div className="flex flex-col">
         <label className="text-sm font-medium text-gray-700 mb-2">
-          What type of chart you want
+          What type of chart you want from PostHog
         </label>
-        <select
+        <input
+          type="text"
+          placeholder="Enter chart type from PostHog"
           value={chartType}
           onChange={(e) => setChartType(e.target.value)}
           className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
-        >
-          <option value="">Select chart type</option>
-          <option value="line">Line Chart</option>
-          <option value="bar">Bar Chart</option>
-          <option value="pie">Pie Chart</option>
-        </select>
+        />
       </div>
 
       {/* Error Message */}
