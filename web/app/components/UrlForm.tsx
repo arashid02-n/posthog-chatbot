@@ -6,55 +6,97 @@ export default function UrlForm({
   onSubmit,
   loading
 }: {
-  onSubmit: (url: string) => void;
+  onSubmit: (data: { url: string; chartType: string }) => void;
   loading: boolean;
 }) {
   const [url, setUrl] = useState("");
+  const [chartType, setChartType] = useState("");
+  const [error, setError] = useState("");
+
+  // Regex to validate URL starting with https:// and ending with .com
+  const urlPattern = /^https:\/\/.+\.com$/;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    if (!url) return;
 
-    // Register Event in PostHog
+    // Validation
+    if (!urlPattern.test(url)) {
+      setError("URL must start with https:// and end with .com");
+      return;
+    }
+    if (!chartType) {
+      setError("Please select a chart type");
+      return;
+    }
+
+    setError("");
+
+    // Optional: Register Event in PostHog
     try {
-      // Call backend API to register event
       await fetch("/api/posthog-event", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           event: "generate_chart_clicked",
-          properties: { url },
+          properties: { url, chartType },
         }),
       });
     } catch (err) {
       console.error("Failed to register event", err);
     }
 
-    // Call the main onSubmit function to generate chart
-    onSubmit(url);
+    // Call parent onSubmit
+    onSubmit({ url, chartType });
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-md p-6 rounded-xl space-y-4"
+      className="bg-white shadow-2xl p-6 md:p-8 rounded-3xl space-y-6 max-w-xl mx-auto transition-transform transform hover:scale-[1.01]"
     >
-      <label className="block text-sm font-medium">
-        Enter your website URL
-      </label>
+      <h2 className="text-2xl font-bold text-gray-800 text-center">
+        Generate Your Chart
+      </h2>
 
-      <input
-        type="url"
-        className="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-brand focus:outline-none"
-        placeholder="https://example.com"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-      />
+      {/* URL Input */}
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-2">
+          Link of your website
+        </label>
+        <input
+          type="url"
+          placeholder="https://example.com"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
+        />
+      </div>
 
+      {/* Chart Type Select */}
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-2">
+          What type of chart you want
+        </label>
+        <select
+          value={chartType}
+          onChange={(e) => setChartType(e.target.value)}
+          className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
+        >
+          <option value="">Select chart type</option>
+          <option value="line">Line Chart</option>
+          <option value="bar">Bar Chart</option>
+          <option value="pie">Pie Chart</option>
+        </select>
+      </div>
+
+      {/* Error Message */}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-brand text-white py-3 rounded-lg font-semibold hover:bg-brand-light transition"
+        className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md"
       >
         {loading ? "Analyzing..." : "Generate Chart"}
       </button>
