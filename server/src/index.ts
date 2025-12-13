@@ -1,46 +1,48 @@
-// server/src/index.ts
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
-import { analyzeUrl } from "./api/analyze";
-import { createMCPServer } from "./mcp/mcpServer";
-import { logger } from "./utils/logger";
-import { sendEvent } from "./api/posthogEvent";
+import passport from "passport";
 
+// Load environment variables from .env
 dotenv.config();
 
+// Import routes
+import authRoutes from "./auth/auth.routes";
+
+// Import prisma config (Prisma 7)
+import { prisma } from "../prisma/prisma.config";
+
+// Import Google strategy (initializes passport strategy)
+import "./auth/google.strategy";
+
+// Create Express app
 const app = express();
-app.use(express.json());
 
-// Analyze API
-app.post("/api/analyze", async (req, res) => {
+// Middleware
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse JSON bodies
+app.use(passport.initialize()); // Initialize Passport for OAuth
+
+// Routes
+app.use("/api/auth", authRoutes);
+
+// Health check route
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK" });
+});
+
+// Example: simple API using Prisma
+app.get("/api/users", async (req, res) => {
   try {
-    const result = await analyzeUrl(req.body.url);
-    return res.json(result);
-  } catch (err: any) {
-    logger.error("Analyze failed", err);
-    return res.status(500).json({ error: err.message });
+    const users = await prisma.user.findMany();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// PostHog event API
-app.post("/api/posthog-event", async (req, res) => {
-  const { event, properties } = req.body;
-  if (!event) return res.status(400).json({ error: "Event name required" });
-
-  try {
-    await sendEvent(event, properties || {});
-    return res.json({ status: "ok" });
-  } catch (err: any) {
-    logger.error("Failed to send PostHog event", err);
-    return res.status(500).json({ error: err.message });
-  }
-});
-
-// MCP server mount (if present)
-createMCPServer(app);
-
-// Convert env string → number, use 0.0.0.0 for Docker
-const PORT = Number(process.env.MCP_SERVER_PORT || process.env.SERVER_PORT) || 4000;
-app.listen(PORT, "0.0.0.0", () => {
-  logger.info(`Backend server running on port ${PORT}`);
+// Start server
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
