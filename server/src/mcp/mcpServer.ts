@@ -5,7 +5,7 @@ import { mcpHandlers } from "./handlers";
  * Exposes MCP (Model Context Protocol) tool endpoints.
  */
 export function createMCPServer(app: Express) {
-  app.post("/mcp/run", async (req, res) => {
+  app.post("/api/mcp/run", async (req, res) => {
     const { tool, args } = req.body;
 
     if (!mcpHandlers[tool]) {
@@ -20,3 +20,4 @@ export function createMCPServer(app: Express) {
     }
   });
 }
+

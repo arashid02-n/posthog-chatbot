@@ -1,11 +1,38 @@
+import { posthogClient } from "./client";
+
 /**
- * Fetch time-series data (trend chart)
+ * Fetch trend data from PostHog (example: pageviews over time)
  */
 export async function getTrends() {
-  // TODO: Replace with actual trend request to PostHog API
-  return [
-    { date: "2024-01-01", count: 12 },
-    { date: "2024-01-02", count: 18 },
-    { date: "2024-01-03", count: 32 },
-  ];
+  try {
+    const response = await posthogClient.post("/insights/", {
+      insight: "TRENDS",
+      events: [
+        {
+          id: "$pageview",
+          type: "events",
+        },
+      ],
+      interval: "day",
+      date_from: "-7d",
+    });
+
+    return {
+      chartData: response.data.result || [],
+      summary: "Pageview trends for the last 7 days",
+    };
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.detail ||
+      error?.message ||
+      "Failed to fetch trends";
+
+    console.error("PostHog trends error:", message);
+
+    return {
+      chartData: [],
+      summary: "No trend data available",
+    };
+  }
 }
+
