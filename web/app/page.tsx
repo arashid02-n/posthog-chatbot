@@ -9,16 +9,28 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
 
   const handleAnalyze = async (data: { url: string; chartType: string }) => {
-    setLoading(true);
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      body: JSON.stringify({ url: data.url, chartType: data.chartType }),
-    });
+  setLoading(true);
 
-    const chartData = await res.json();
-    setChart(chartData.chart);
-    setLoading(false);
-  };
+  const res = await fetch(
+    "https://posthog.rashidnazari.com/api/mcp/run",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tool: "create_chart",
+        args: {
+          name: "Generate Button Clicks",
+          event: "generate_chart_clicked",
+          chartType: data.chartType,
+        },
+      }),
+    }
+  );
+
+  const result = await res.json();
+  setChart(result.result);
+  setLoading(false);
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-6 space-y-10">
