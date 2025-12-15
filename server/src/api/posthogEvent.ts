@@ -6,13 +6,13 @@ export async function sendEvent(
 ) {
   try {
     await axios.post(
-      "https://us.i.posthog.com/capture/",
+      `${process.env.POSTHOG_HOST}/capture/`,
       {
-        api_key: process.env.POSTHOG_API_KEY, // phc_***
+        api_key: process.env.POSTHOG_API_KEY,
         event: eventName,
         properties: {
           ...properties,
-          distinct_id: properties.distinct_id || "server",
+          distinct_id: properties.distinct_id || "mcp_server",
         },
       },
       {
