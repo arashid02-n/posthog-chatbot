@@ -15,6 +15,9 @@ import { prisma } from "../prisma/prisma.config";
 // Import Google strategy (initializes passport strategy)
 import "./auth/google.strategy";
 
+// Import MCP
+import { createMCPServer } from "./mcp/mcpServer";
+
 // Create Express app
 const app = express();
 
@@ -41,8 +44,18 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-// Start server
+// Start main server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Main server running on http://localhost:${PORT}`);
+});
+
+// ----------------------
+// Start MCP server on a separate port
+// ----------------------
+const MCP_PORT = process.env.MCP_PORT || 3001;
+createMCPServer(app); // Mount MCP endpoints on same Express app
+
+app.listen(MCP_PORT, () => {
+  console.log(`MCP server running on http://localhost:${MCP_PORT}`);
 });
