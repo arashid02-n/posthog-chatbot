@@ -2,6 +2,7 @@ import { createChart } from "../posthog/createChart";
 import { getUrlInsights } from "../posthog/insights";
 import { getEvents } from "../posthog/events";
 import { getTrends } from "../posthog/trends";
+import { sendEvent } from "../api/posthogEvent";
 
 /**
  * All MCP tools exposed to Chat interface.
@@ -24,7 +25,12 @@ export const mcpHandlers: Record<string, Function> = {
     event: string;
     chartType?: "line" | "bar" | "pie";
   }) => {
-    return await createChart(args);
+    // Step 1: Ensure Event is sent first
+    await sendEvent(args.event, { chartType: args.chartType });
+
+    // Step 2: Create Chart after event ingestion
+    const chart = await createChart(args);
+
+    return chart;
   },
 };
-
