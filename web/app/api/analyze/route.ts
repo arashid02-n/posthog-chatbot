@@ -1,19 +1,31 @@
 import { NextResponse } from "next/server";
 
-// Forward request to backend (Python MCP/Node server)
 export async function POST(req: Request) {
-  const { url } = await req.json();
+  const body = await req.json();
 
-  // Temporary mock until backend is ready
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/mcp/run`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tool: "create_chart",
+        args: {
+          name: "Generate Button Clicks",
+          event: "generate_chart_clicked",
+          chartType: body.chartType || "line",
+        },
+      }),
+    }
+  );
+
+  const data = await res.json();
+
   return NextResponse.json({
     chart: {
-      url,
       status: "success",
-      message: "Chart generated successfully (placeholder)",
-      points: [
-        { name: "Visitors", value: 120 },
-        { name: "Conversions", value: 45 }
-      ]
-    }
+      insightUrl: data?.result?.url,
+      insightId: data?.result?.insightId,
+    },
   });
 }
