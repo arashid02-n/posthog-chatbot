@@ -13,6 +13,13 @@ export async function createChart(args: {
     throw new Error("Missing PostHog credentials");
   }
 
+  // 1️⃣ SEND EVENT FIRST
+  await sendEvent(args.event, {
+    source: "mcp_chatbot",
+    chart_name: args.name,
+  });
+
+  // 2️⃣ CREATE INSIGHT
   const response = await axios.post(
     `https://us.i.posthog.com/api/projects/${projectId}/insights/`,
     {
@@ -23,17 +30,16 @@ export async function createChart(args: {
           {
             id: args.event,
             type: "events",
-            order: 0,
           },
         ],
         insight: "TRENDS",
+        display:
+          args.chartType === "bar"
+            ? "ActionsBar"
+            : args.chartType === "pie"
+            ? "ActionsPie"
+            : "ActionsLineGraph",
       },
-      display:
-        args.chartType === "bar"
-          ? "ActionsBar"
-          : args.chartType === "pie"
-          ? "ActionsPie"
-          : "ActionsLineGraph",
     },
     {
       headers: {
@@ -43,15 +49,9 @@ export async function createChart(args: {
     }
   );
 
-  // ✅ ensure at least one event exists
-  await sendEvent(args.event, {
-    source: "mcp_chatbot",
-    chart_name: args.name,
-  });
-
   return {
     success: true,
     insightId: response.data.id,
-    url: `https://us.posthog.com/insights/${response.data.short_id}`,
+    url: `${process.env.POSTHOG_APP_HOST}/insights/${response.data.short_id}`,
   };
 }
