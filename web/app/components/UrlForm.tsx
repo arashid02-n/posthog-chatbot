@@ -31,7 +31,7 @@ export default function UrlForm({
 
     setError("");
 
-    // Step 1: Register Event in PostHog first
+    // Optional: Register Event in PostHog
     try {
       await fetch("/api/posthog-event", {
         method: "POST",
@@ -41,12 +41,11 @@ export default function UrlForm({
           properties: { url, chartType },
         }),
       });
-      console.log("✅ Event sent before chart creation");
     } catch (err) {
       console.error("Failed to register event", err);
     }
 
-    // Step 2: Call parent onSubmit (Chart creation)
+    // Call parent onSubmit
     onSubmit({ url, chartType });
   };
 
