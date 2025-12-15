@@ -16,30 +16,32 @@ export default function UrlForm({
 
   const urlPattern = /^https:\/\/.+\.com$/;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: any) => {
+  e.preventDefault();
 
-    if (!urlPattern.test(url)) {
-      setError("URL must start with https:// and end with .com");
-      return;
-    }
+  if (!urlPattern.test(url)) {
+    setError("URL must start with https:// and end with .com");
+    return;
+  }
 
-    if (!chartType) {
-      setError("Please enter chart type");
-      return;
-    }
+  if (!chartType) {
+    setError("Please enter chart type");
+    return;
+  }
 
-    setError("");
+  setError("");
 
-    // ✅ REAL PostHog event from browser
-    posthog.capture("generate_chart_clicked", {
+  //  Event  Browser
+  if (window.posthog) {
+    window.posthog.capture("generate_chart_clicked", {
       url,
       chartType,
     });
+  }
 
-    // Call parent
-    onSubmit({ url, chartType });
-  };
+  onSubmit({ url, chartType });
+};
+
 
   return (
     <form
