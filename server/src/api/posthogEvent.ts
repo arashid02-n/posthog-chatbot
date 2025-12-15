@@ -6,9 +6,9 @@ export async function sendEvent(
 ) {
   try {
     await axios.post(
-      `${process.env.POSTHOG_HOST}/capture/`,
+      "https://us.i.posthog.com/capture/",
       {
-        api_key: process.env.POSTHOG_PROJECT_API_KEY,
+        api_key: process.env.POSTHOG_API_KEY, // phc_***
         event: eventName,
         properties: {
           ...properties,
@@ -22,10 +22,10 @@ export async function sendEvent(
       }
     );
 
-    console.log("PostHog event sent:", eventName);
+    console.log("✅ PostHog event sent:", eventName);
   } catch (err: any) {
     console.error(
-      "PostHog ingest failed:",
+      "❌ PostHog ingest failed:",
       err?.response?.data || err.message
     );
   }
