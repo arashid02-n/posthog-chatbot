@@ -6,8 +6,6 @@ import passport from "passport";
 // Load environment variables from .env
 dotenv.config();
 
-// Import Google strategy (initializes passport strategy)
-import "./auth/google.strategy";
 
 // Import MCP
 import { createMCPServer } from "./mcp/mcpServer";
