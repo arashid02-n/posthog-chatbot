@@ -6,12 +6,6 @@ import passport from "passport";
 // Load environment variables from .env
 dotenv.config();
 
-// Import routes
-import authRoutes from "./auth/auth.routes";
-
-// Import prisma config (Prisma 7)
-import { prisma } from "../prisma/prisma.config";
-
 // Import Google strategy (initializes passport strategy)
 import "./auth/google.strategy";
 
@@ -26,22 +20,9 @@ app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
 app.use(passport.initialize()); // Initialize Passport for OAuth
 
-// Routes
-app.use("/api/auth", authRoutes);
-
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
-});
-
-// Example: simple API using Prisma
-app.get("/api/users", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
-  }
 });
 
 // Start main server
