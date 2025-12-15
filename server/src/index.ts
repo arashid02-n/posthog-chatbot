@@ -1,11 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import passport from "passport";
 
 // Load environment variables from .env
 dotenv.config();
-
 
 // Import MCP
 import { createMCPServer } from "./mcp/mcpServer";
@@ -16,14 +14,13 @@ const app = express();
 // Middleware
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
-app.use(passport.initialize()); // Initialize Passport for OAuth
 
 // Health check route
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-// Start main server
+// Start main server (optional, can keep same port or skip if only MCP)
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Main server running on http://localhost:${PORT}`);
